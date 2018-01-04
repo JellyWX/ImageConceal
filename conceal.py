@@ -10,16 +10,13 @@ def hex_to_rgb(value):
 img = sys.argv[1]
 
 string = input('Please enter the string to be concealed > ')
-mode = ''
-
-while mode not in ['heavy', 'light']:
-  mode = input('Please select a mode [light (easier to detect, takes less pixels)/heavy (harder to detect, takes 3x the pixels)] > ').lower()
-
 
 char_list = [str(ord(c)) for c in string]
 
-print(len(char_list))
-char_list.insert(0, str(len(char_list)))
+if len(str(len(char_list))) > 9:
+  print('String too long')
+  sys.exit()
+
 
 for char in range(len(char_list)): # convert all chars into 3-piece strings to be injected
   if len(char_list[char]) > 3:
@@ -30,13 +27,12 @@ for char in range(len(char_list)): # convert all chars into 3-piece strings to b
   while len(char_list[char]) != 3:
     char_list[char] = '0' + char_list[char]
 
+char_list.insert(0, str(len(char_list)))
+char_list.insert(0, str(len(str(len(char_list))))) # adds the number of digits, so the revealer can know how much we're looking at
 
-if mode == 'heavy':
-  char_list = [c for char in char_list for c in char]
-  char_list.insert(0,'2')
+print('Digits:', len(str(len(char_list))))
 
-elif mode == 'light':
-  char_list.insert(0,'1')
+char_list = [c for char in char_list for c in char]
 
 
 arr = PixelArray(image.load(img)) # load the specified image as an integer array
@@ -51,13 +47,12 @@ if width*height < len(char_list):
 x = 0
 y = 0
 for char in char_list:
-  letter_space = len(char)
   str_pix = str(arr[x][y])
-  str_pix = str_pix[:-letter_space] + char
+  str_pix = str_pix[:-1] + char
 
   if int(str_pix) > 16777215:
     new = list(str_pix)
-    new[-letter_space-1] = '0'
+    new[-2] = '0'
     str_pix = ''.join(new)
 
   arr[x][y] = hex_to_rgb('#' + hex(int(str_pix))[2:])
