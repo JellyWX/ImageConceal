@@ -10,6 +10,11 @@ def hex_to_rgb(value):
 img = sys.argv[1]
 
 string = input('Please enter the string to be concealed > ')
+mode = ''
+
+while mode not in ['heavy', 'light']:
+  mode = input('Please select a mode [light (easier to detect, takes less pixels)/heavy (harder to detect, takes 3x the pixels)] > ').lower()
+
 
 char_list = [str(ord(c)) for c in string]
 print(str(len(char_list)))
@@ -17,11 +22,22 @@ char_list.insert(0, str(len(char_list)))
 
 for char in range(len(char_list)): # convert all chars into 3-piece strings to be injected
   if len(char_list[char]) > 3:
-    print('Please use only ASCII characters')
+    print('Please use only ASCII characters and make sure your message is between 1 and 999 characters long')
     sys.exit()
 
   while len(char_list[char]) != 3:
     char_list[char] = '0' + char_list[char]
+
+
+if mode == 'heavy':
+  char_list = [c for c in char for char in char_list]
+  char_list.insert(0,'2')
+  letter_space = 1
+
+elif mode == 'light':
+  char_list.insert(0,'001')
+  letter_space = 3
+
 
 arr = PixelArray(image.load(img)) # load the specified image as an integer array
 
@@ -36,7 +52,7 @@ x = 0
 y = 0
 for char in char_list:
   str_pix = str(arr[x][y])
-  str_pix = str_pix[:-3] + char
+  str_pix = str_pix[:-letter_space] + char
   arr[x][y] = hex_to_rgb('#' + hex(int(str_pix))[2:])
 
   if y < height - 1:
@@ -44,6 +60,7 @@ for char in char_list:
   else:
     x += 1
     y = 0
+
 
 s = arr.make_surface()
 
