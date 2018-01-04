@@ -4,12 +4,13 @@ import sys
 img = sys.argv[1]
 
 arr = PixelArray(image.load(img))
-digits = int(str(arr[0][0])[-1])
+max_size = int(str(arr[0][0])[-1])
+digits = int(str(arr[0][1])[-1])
 
 print(digits)
 
 length = ''
-for i in range(1,digits+1):
+for i in range(2,digits+2):
   length += str(arr[0][i])[-1:]
 
 length = int(length)
@@ -19,10 +20,10 @@ height = len(arr[0])
 
 word = ''
 x = 0
-y = digits+1
+y = digits+2
 char_buffer = ''
-for i in range(length*3+1):
-  if len(char_buffer) == 3:
+for i in range(length*max_size+1):
+  if len(char_buffer) == max_size:
     print('Decoding character:', char_buffer)
     word += chr(
       int(

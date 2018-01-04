@@ -14,26 +14,22 @@ string = input('Please enter the string to be concealed > ')
 char_list = [str(ord(c)) for c in string]
 
 if len(str(len(char_list))) > 9:
-  print('String too long')
+  print('String too long. The max size is 999999999')
   sys.exit()
 
+largest_char = max([len(char) for char in char_list])
 
 for char in range(len(char_list)): # convert all chars into 3-piece strings to be injected
-  if len(char_list[char]) > 3:
-    print('Please use only ASCII characters with values less than 215 and make sure your message is between 1 and 999 characters long')
-    print(char_list[char])
-    sys.exit()
-
-  while len(char_list[char]) != 3:
+  while len(char_list[char]) != largest_char:
     char_list[char] = '0' + char_list[char]
 
 char_list.insert(0, str(len(char_list)))
 char_list.insert(0, str(len(str(len(char_list))))) # adds the number of digits, so the revealer can know how much we're looking at
+char_list.insert(0, str(largest_char))
 
 print('Digits:', len(str(len(char_list))))
 
 char_list = [c for char in char_list for c in char]
-
 
 arr = PixelArray(image.load(img)) # load the specified image as an integer array
 
@@ -55,7 +51,7 @@ for char in char_list:
     new[-2] = '0'
     str_pix = ''.join(new)
 
-  arr[x][y] = hex_to_rgb('#' + hex(int(str_pix))[2:])
+  arr[x][y] = hex_to_rgb('#' + hex(int(str_pix))[2:]) # this messy conversion is used because pygame doesnt work well with integers or hex numbers
 
   if y < height - 1:
     y += 1
