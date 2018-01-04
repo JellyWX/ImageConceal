@@ -17,7 +17,8 @@ while mode not in ['heavy', 'light']:
 
 
 char_list = [str(ord(c)) for c in string]
-print(str(len(char_list)))
+
+print(len(char_list))
 char_list.insert(0, str(len(char_list)))
 
 for char in range(len(char_list)): # convert all chars into 3-piece strings to be injected
@@ -30,13 +31,11 @@ for char in range(len(char_list)): # convert all chars into 3-piece strings to b
 
 
 if mode == 'heavy':
-  char_list = [c for c in char for char in char_list]
+  char_list = [c for char in char_list for c in char]
   char_list.insert(0,'2')
-  letter_space = 1
 
 elif mode == 'light':
-  char_list.insert(0,'001')
-  letter_space = 3
+  char_list.insert(0,'1')
 
 
 arr = PixelArray(image.load(img)) # load the specified image as an integer array
@@ -51,6 +50,7 @@ if width*height < len(char_list):
 x = 0
 y = 0
 for char in char_list:
+  letter_space = len(char)
   str_pix = str(arr[x][y])
   str_pix = str_pix[:-letter_space] + char
   arr[x][y] = hex_to_rgb('#' + hex(int(str_pix))[2:])
