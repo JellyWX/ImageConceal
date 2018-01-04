@@ -23,7 +23,8 @@ char_list.insert(0, str(len(char_list)))
 
 for char in range(len(char_list)): # convert all chars into 3-piece strings to be injected
   if len(char_list[char]) > 3:
-    print('Please use only ASCII characters and make sure your message is between 1 and 999 characters long')
+    print('Please use only ASCII characters with values less than 215 and make sure your message is between 1 and 999 characters long')
+    print(char_list[char])
     sys.exit()
 
   while len(char_list[char]) != 3:
@@ -53,6 +54,12 @@ for char in char_list:
   letter_space = len(char)
   str_pix = str(arr[x][y])
   str_pix = str_pix[:-letter_space] + char
+
+  if int(str_pix) > 16777215:
+    new = list(str_pix)
+    new[-letter_space-1] = '0'
+    str_pix = ''.join(new)
+
   arr[x][y] = hex_to_rgb('#' + hex(int(str_pix))[2:])
 
   if y < height - 1:

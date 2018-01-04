@@ -33,6 +33,7 @@ if mode == 1: #light
   print(word)
 
 if mode == 2: #heavy
+  print('Running a heavy decode...')
 
   length = ''
   for i in range(1,4):
@@ -47,7 +48,7 @@ if mode == 2: #heavy
   x = 0
   y = 4
   char_buffer = ''
-  for i in range(length*3):
+  for i in range(length*3+1):
     if len(char_buffer) == 3:
       print('Decoding character:', char_buffer)
       word += chr(
